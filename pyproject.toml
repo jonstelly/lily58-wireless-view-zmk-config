@@ -1,0 +1,26 @@
+[project]
+name = "zmk-build"
+version = "0.1.0"
+description = "ZMK firmware build environment"
+requires-python = ">=3.8"
+dependencies = [
+    "west>=1.0.0",
+    "click",
+    "pyelftools",
+    "intelhex",
+    "pyyaml",
+    "pykwalify",
+    "canopen",
+    "packaging",
+    "progress",
+    "psutil",
+    "anytree",
+    "imgtool",
+    "cbor2",
+    "ecdsa>=0.18.0b1",
+    "setuptools",
+    "protobuf",
+]
+
+[tool.uv]
+dev-dependencies = []

@@ -6,6 +6,35 @@ set -e
 # Change to script directory
 cd "$(dirname "$0")"
 
+# Setup Python environment and west
+setup_python_environment() {
+    echo "Setting up Python environment..."
+    
+    # Create virtual environment if it doesn't exist
+    if [ ! -d ".venv" ]; then
+        echo "Creating Python virtual environment..."
+        python3 -m venv .venv
+    fi
+    
+    # Activate virtual environment
+    source .venv/bin/activate
+    
+    # Install/upgrade pip
+    pip install --upgrade pip
+    
+    # Install west if not already installed
+    if ! command -v west &> /dev/null; then
+        echo "Installing west..."
+        pip install west
+    fi
+    
+    # Install essential build dependencies
+    echo "Installing build dependencies..."
+    pip install setuptools protobuf grpcio-tools pyelftools PyYAML pykwalify canopen packaging progress psutil pylink-square pyserial requests anytree intelhex
+    
+    echo "Python environment ready"
+}
+
 # Setup environment variables
 setup_environment() {
     export ZEPHYR_BASE="$(pwd)/zephyr"
@@ -34,6 +63,9 @@ setup_environment() {
 
 # Initialize or update west workspace
 setup_west() {
+    # Ensure we're in the virtual environment
+    source .venv/bin/activate
+    
     if [ ! -d "zmk" ]; then
         echo "Initializing west workspace..."
         west init -l config
@@ -46,6 +78,9 @@ setup_west() {
 
 # Build firmware for both halves
 build_firmware() {
+    # Ensure we're in the virtual environment
+    source .venv/bin/activate
+    
     # Clean previous build
     [ -d "build" ] && rm -rf build
     
@@ -87,6 +122,7 @@ build_firmware() {
 }
 
 # Main execution
+setup_python_environment
 setup_environment
 setup_west
 build_firmware
