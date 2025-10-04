@@ -82,7 +82,7 @@ build_firmware() {
     source .venv/bin/activate
     
     # Clean previous build
-    [ -d "build" ] && rm -rf build
+    [ -d "out" ] && rm -rf out
     
     # Build configurations
     builds=(
@@ -97,7 +97,7 @@ build_firmware() {
         
         echo "Building $name side..."
         
-        cmd=(west build -s zmk/app -b "$board" -d "build/$name")
+        cmd=(west build -s zmk/app -b "$board" -d "out/$name")
         
         # Add snippet if specified
         [ -n "$snippet" ] && cmd+=(-S "$snippet")
@@ -108,7 +108,7 @@ build_firmware() {
         "${cmd[@]}"
         
         # Copy firmware
-        src="build/$name/zephyr/zmk.uf2"
+        src="out/$name/zephyr/zmk.uf2"
         dst="firmware/lily58_$name.uf2"
         
         if [ -f "$src" ]; then
